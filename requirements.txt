@@ -3,3 +3,5 @@ Pillow
 pypiwin32
 browser-cookie3
 pycryptodome
+requests
+pywin32
