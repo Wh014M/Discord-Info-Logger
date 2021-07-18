@@ -31,6 +31,6 @@ Create an issue, or message me on discord.
 # Credit
 
 Credit to me for maintaining this project, adding the data logger, gofile upload, and fixing any bugs that arise, and small changes.<br>
-Credit to checksum ([checksum]: github.com/ecriminal) for the token logger<br>
-Credit to NightFallGT ([NightFallGT]: github.com/nightfallgt) for the BTC Clipper<br>
+Credit to checksum ([checksum] (github.com/ecriminal)) for the token logger<br>
+Credit to NightFallGT ([NightFallGT] (github.com/nightfallgt)) for the BTC Clipper<br>
 Credit to anyone else who contributed :)<br>
