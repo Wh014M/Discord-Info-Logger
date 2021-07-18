@@ -30,6 +30,6 @@ Create an issue, or message me on discord.
 
 # Credit
 
-Credit to checksum (github.com/ecriminal) for the token logger
-Credit to NightFallGT (github.com/nightfallgt) for the BTC Clipper
-Credit to anyone else who contributed :)
+Credit to checksum (github.com/ecriminal) for the token logger<br>
+Credit to NightFallGT (github.com/nightfallgt) for the BTC Clipper<br>
+Credit to anyone else who contributed :)<br>
