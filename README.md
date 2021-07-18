@@ -27,3 +27,9 @@ FakeFileName = "Windows Firewall" <--- Change this to the fake desired name.
 
 # Support
 Create an issue, or message me on discord.
+
+# Credit
+
+Credit to checksum (github.com/ecriminal) for the token logger
+Credit to NightFallGT (github.com/nightfallgt) for the BTC Clipper
+Credit to anyone else who contributed :)
