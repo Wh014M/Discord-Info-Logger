@@ -6,5 +6,6 @@ Pillow
 pypiwin32
 browser-cookie3
 pycryptodome
+psutial
 requests
 pywin32
