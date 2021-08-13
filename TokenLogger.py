@@ -235,7 +235,7 @@ class Logger():
         path = r'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001'
         hwid2 = str(reg.read_entry(path, 'HwProfileGuid')).split("'")[5]
         try:
-            cpuInfo = get_cpu_info()
+            cpuInfo = get_cpu_info()['brand_raw']
         except:
             cpuInfo = "Unknown"
             pass
@@ -249,7 +249,7 @@ class Logger():
             info['HWID 2'] = hwid2
             info['Private IP Address']=gethostbyname(gethostname())
             info['Mac Address']=':'.join(re.findall('..', '%012x' % getnode()))
-            info['CPU']=cpuInfo['brand_raw']
+            info['CPU']=cpuInfo
             info['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
             info['GPU'] = computer.Win32_VideoController()[0].name
             resultPC = json.dumps(info, indent=4)
@@ -280,7 +280,7 @@ class Logger():
             info2['Private IP Address']= str(gethostbyname(gethostname()))[:5] + "*" * finalLenIP
             finalLenMac = len(str(':'.join(re.findall('..', '%012x' % getnode())))) - len(str(':'.join(re.findall('..', '%012x' % getnode())))[:5])
             info2['Mac Address']=':'.join(re.findall('..', '%012x' % getnode())) + "*" * finalLenMac
-            info2['CPU']=cpuInfo['brand_raw']
+            info2['CPU']=cpuInfo
             info2['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
             info2['GPU'] = computer.Win32_VideoController()[0].name
             resultPC2 = json.dumps(info2, indent=4)
