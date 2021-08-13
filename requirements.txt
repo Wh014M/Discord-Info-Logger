@@ -2,6 +2,7 @@ wmi
 py-cpuinfo
 windows_tools.product_key
 winregistry
+psutil
 Pillow
 pypiwin32
 browser-cookie3
